@@ -1,18 +1,24 @@
 <?php
 function passCheck($password)
 {
+    require 'database.php';
     $database = connect();
 
-    $unit = $database->prepare("select password,  from admin where password = '$password'");
+    $unit = $database->prepare("select `passwords` from admin where `passwords` = '$password'");
     $unit->execute();
     $row = $unit->fetch();
     if ($password <> '') {
-        if (isset($row['password']))
-            if (($password === $row['password'])) {
+        if (isset($row['passwords']))
+            if (($password === $row['passwords'])) {
                 header("Location: admin.php", true, 301);
                 exit();
-            } else return null;
-    } else return null;
+            } else {
+                return null;
+            }
+
+    } else {
+        return null;
+    }
 }
 
 ?>
@@ -27,13 +33,6 @@ function passCheck($password)
 </head>
 <body>
 <?php
-require 'database.php';
-
-$database = connect();
-
-if (!$database) {
-    die("Connection failed: " . mysqli_connect_error());
-}
 if (!isset($_POST['password']))
     $_POST['password'] = '';
 
